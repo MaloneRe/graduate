@@ -51,8 +51,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
-import mahoutTest.RecommendFactory.NEIGHBORHOOD;
-import mahoutTest.RecommendFactory.SIMILARITY;
 
 public class RecommendFactory {
 	

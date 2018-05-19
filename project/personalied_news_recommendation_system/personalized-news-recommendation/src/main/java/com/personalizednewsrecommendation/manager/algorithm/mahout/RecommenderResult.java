@@ -1,6 +1,7 @@
 package com.personalizednewsrecommendation.manager.algorithm.mahout;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.*;
 
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
@@ -40,7 +41,7 @@ public class RecommenderResult {
 		}
 		System.out.println(dataModel.toString());
 		RecommenderBuilder recommenderBuilder =
-				 RecommenderEvaluator.svd(dataModel);
+				 RecommenderEvaluator.svd(dataModel, 2, new HashMap<>());
 		 //RecommenderResult.recommender = recommenderBuilder.buildRecommender(dataModel);
 		 return  RecommenderResult.recommender = recommenderBuilder.buildRecommender(dataModel);
 		

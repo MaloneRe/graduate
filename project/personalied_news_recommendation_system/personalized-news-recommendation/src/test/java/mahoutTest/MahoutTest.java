@@ -119,7 +119,7 @@ public class MahoutTest {
 			
 			com.personalizednewsrecommendation
 			.manager.algorithm.mahout
-			.RecommenderEvaluator.itemCF(dataModel, 2);
+			.RecommenderEvaluator.itemCF(dataModel, 2, null);
 		} catch (TasteException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.toString());
