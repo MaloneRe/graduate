@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personalizednewsrecommendation.manager.dao.PreferencesDAO">
+    <insert id="insertPreferences" parameterType="Preferences"
+         useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO COMMENT(user_id, news_id, preference)
+        VALUES(#{uid}, #{nid}, #{preference})
+    </insert>
+    <select id="getById" parameterType="Long" resultMap="preferenceMap">
+        select * from news_preferences where id = #{id} 
+    </select>
+    <select id="getByIds" parameterType="Preferences" resultMap="preferenceMap">
+        select * from news_preferences where user_id = #{uid} and news_id = #{nid} 
+    </select>
+    <select id="getByUidNid" resultMap="preferenceMap">
+        select * from news_preferences where user_id = #{0} and news_id = #{1}
+    </select>
+    <resultMap type="Preferences" id="preferenceMap">
+        <id property="id" column="id"/>
+        <result property="uid" column="user_id"/>
+        <result property="nid" column="news_id"/>
+        <result property="preference" column="preference"/>
+        <result property="time" column="gmt_create"/> 
+    </resultMap>
+    
+    <resultMap type="Preferences" id="preferencesMap">
+        <id property="id" column="id"/>
+        <result property="uid" column="user_id"/>
+        <result property="nid" column="news_id"/>
+        <result property="preference" column="preference"/>
+        <result property="time" column="gmt_create"/> 
+    </resultMap>
+    <select id="getByUserId" parameterType="Long" resultMap="preferencesMap">
+        select * from news_preferences where user_id = #{uid}
+    </select>
+    <select id="getByNewsId" parameterType="Long" resultMap="preferencesMap">
+        select * from news_preferences where news_id = #{nid}
+    </select>
+    
+    <delete id="deletePreference" parameterType="Preferences">
+        delete from news_preferences 
+        <where>
+            <if test="uid != null and nid == null">
+                user_id = #{uid} 
+            </if>
+            <if test="uid == null and nid != null">
+                or news_id = #{nid}
+            </if>
+            <if test="uid != null and nid != null">
+                or user_id = #{uid} and news_id = #{nid}
+            </if>
+        </where>
+    </delete>
+    
+    <update id="updatePreference" parameterType="Preferences">
+        update news_preferences
+        <if test="uid != null or nid != null or id != null">
+            set preference = #{preference},
+        </if> 
+        <where>
+            <if test=" id == null">
+            	<choose>
+            		<when test="uid != null">
+            	    	user_id = #{uid}
+            		</when>
+            		<when test="nid != null ">
+            		  	and news_id = #{nid}
+            		</when>
+            		<otherwise>
+            		   	
+            		</otherwise>
+        		</choose>
+        	</if>
+        	<if test=" id != null">
+        	    and id = #{id}
+        	</if>
+        </where>
+    </update>
+</mapper>

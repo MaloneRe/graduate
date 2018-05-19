@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personalizednewsrecommendation.manager.dao.CommentDAO">
+   <insert id="insertComment" parameterType="Comment"
+        useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO COMMENT(user_id, news_id, content)
+        VALUES(#{uid}, #{nid}, #{content})
+   </insert>
+   <resultMap type="Comment" id="commentMap">
+        <id property="id" column="id" />
+        <result property="content" column="content"/>
+        <result property="uid" column="user_id" />
+        <result property="nid" column="news_id"/> 
+        <result property="time" column="gmt_create"/>
+   </resultMap>
+   <select id="getCommentById" parameterType="Long"
+        resultMap="commentMap">
+        SELECT * 
+        FROM COMMENT 
+        WHERE id = #{id}
+   </select>
+   
+   <resultMap type="Comment" id="commentsMap">
+        <id property="id" column="id" />
+        <result property="content" column="content"/>
+        <result property="uid" column="user_id" />
+        <result property="nid" column="news_id"/> 
+        <result property="time" column="gmt_create"/>
+   </resultMap>
+   <select id="getByUserId" parameterType="Long"
+        resultMap="commentsMap">
+        SELECT * 
+        FROM COMMENT 
+        WHERE user_id = #{uid}
+   </select>
+   <select id="getByNewsId" parameterType="Comment"
+        resultMap="commentsMap">
+        SELECT * 
+        FROM COMMENT 
+        WHERE news_id = #{nid}
+   </select>
+   
+   <select id="getIdByComment" parameterType="Comment"
+        resultMap="commentMap">
+        SELECT * 
+        FROM COMMENT 
+       <where>
+           <if test=" id != null">
+               id = #{id}
+           </if>
+           <if test=" uid != null">
+               and user_id = #{uid}
+           </if>
+           <if test=" nid != null">
+               and news_id = #{nid}
+           </if>
+           <if test=" content != null">
+               and content = #{content}
+           </if>
+       </where>
+   </select>
+   
+   <delete id="deleteComment" parameterType="Long">
+       delete from comment
+       <where>
+           <if test=" id != null ">
+               id = #{id}
+           </if>
+       </where>
+   </delete>
+</mapper>

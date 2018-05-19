@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personalizednewsrecommendation.manager.dao.UserAppendDAO">
+    <select id="getCommentsById" parameterType="Long" resultMap="commentMap">
+        select * from comment
+        where user_id = #{uid}
+    </select>
+     <resultMap type="Comment" id="commentMap">
+        <id property="id" column="id" />
+        <result property="content" column="content"/>
+        <result property="uid" column="user_id" />
+        <result property="nid" column="news_id"/> 
+        <result property="time" column="gmt_create"/>
+   </resultMap>
+   <select id="getNewsesById" parameterType="Long" resultMap="commentMap">
+        select * from comment
+        where news_id = #{nid}
+    </select>
+</mapper>

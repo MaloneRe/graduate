@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 定义别名 -->
+	<typeAliases>
+		<typeAlias alias="test" 
+		    type="com.personalizednewsrecommendation.manager.controller.test" />
+		<typeAlias alias="User" 
+		    type="com.personalizednewsrecommendation.manager.pojo.User" />
+		<typeAlias alias="UserDAO" 
+		    type="com.personalizednewsrecommendation.manager.dao.UserDAO"/>
+		<typeAlias alias="UserService" 
+		    type="com.personalizednewsrecommendation.manager.service.UserService"/>
+		<typeAlias alias="Comment" 
+		    type="com.personalizednewsrecommendation.manager.pojo.Comment" />
+		<typeAlias alias="CommentDAO" 
+		    type="com.personalizednewsrecommendation.manager.dao.CommentDAO" />
+		<typeAlias alias="CommentService" 
+		    type="com.personalizednewsrecommendation.manager.service.CommentService" />
+		
+		
+		
+		<typeAlias alias="Category" 
+		    type="com.personalizednewsrecommendation.manager.pojo.Category" />
+		<typeAlias alias="CategoryDAO" 
+		    type="com.personalizednewsrecommendation.manager.dao.CategoryDAO" />
+		<!-- 
+		<typeAlias alias="CategoryService" 
+		    type="com.personalizednewsrecommendation.manager.dao.CategoryService" />
+		-->
+		<typeAlias alias="News" 
+		    type="com.personalizednewsrecommendation.manager.pojo.News" />
+		<typeAlias alias="NewsDAO" 
+		    type="com.personalizednewsrecommendation.manager.dao.NewsDAO" />
+		<!-- 
+		<typeAlias alias="CategoryService" 
+		    type="com.personalizednewsrecommendation.manager.dao.CategoryService" />
+		-->
+		
+		<typeAlias alias="Preferences" 
+		    type="com.personalizednewsrecommendation.manager.pojo.Preferences" />
+		<typeAlias alias="PreferencesDAO" 
+		    type="com.personalizednewsrecommendation.manager.dao.PreferencesDAO" />
+		<!-- 
+		<typeAlias alias="PreferencesService" 
+		    type="com.personalizednewsrecommendation.manager.dao.PreferencesService" />
+		-->
+		
+		<typeAlias alias="BehaviorLog" 
+		    type="com.personalizednewsrecommendation.manager.pojo.BehaviorLog" />
+		<typeAlias alias="BehaviorLogDAO" 
+		    type="com.personalizednewsrecommendation.manager.dao.BehaviorLogDAO" />
+		<!-- 
+		<typeAlias alias="BehaviorLogService" 
+		    type="com.personalizednewsrecommendation.manager.dao.BehaviorLogService" />
+		-->
+	</typeAliases>
+	<!--  <mappers>
+        <mapper resource="com/personalizednewsrecommendation/manager/mapper/*.xml" />
+    </mappers> -->
+</configuration>

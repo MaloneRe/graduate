@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+	
+	<!-- 引入多个properties文件 的一种方法-->
+	<!-- 
+	<bean id="configProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:activemq.properties</value>
+				<value>classpath:cron.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+			<property name="properties" ref="configProperties" />  
+	</bean>
+	-->
+	
+	
+	<!-- 添加JDBC数据源,指定一个配置文件   引入配置文件 -->
+	<!-- <context:property-placeholder location="classpath:properties/jdbc.properties" 
+	    ignore-unresolvable="true"/> -->
+	 
+	<!-- 引入配置文件 -->
+	 <!-- <bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:properties/jdbc.properties" />
+		
+		这个配置告诉spring，当某个placeholder无法找到时，先不要报错，
+		并尝试用另一个PropertyPlaceholderConfigurer来设置placeholder的值。 
+		
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>  -->
+	
+	
+	<!-- DBCP,自动管理数据库连接的释放和断开， 为newsdatamodel -->
+	<bean id="DBCPDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 初始化物理连接数 -->
+		<property name="initialSize" value="${jdbc.initialSize}" />
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${jdbc.maxActive}" />
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${jdbc.maxIdle}" />
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${jdbc.minIdle}" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${jdbc.maxWait}" />
+	</bean>
+	
+	
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" 
+		destroy-method="close"> <!--  class="org.apache.commons.dbcp.BasicDataSource"  -->
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${jdbc.initialSize}"/>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${jdbc.maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<!-- maxIdle is deprecated -->
+		<property name="maxIdle" value="${jdbc.maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${jdbc.minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${jdbc.maxWait}">
+		   <!--  <bean class="java.lang.Long">
+                <constructor-arg index="0" value="${maxWait}"/>
+            </bean> -->
+		</property>
+	</bean>
+
+	
+	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		
+		<!-- 加载MyBatis的一个小配置文件 -->
+		<!-- 加载mybatis全局配置文件 -->
+		<property name="configLocation"  value="classpath:mybatis/mybatis-config.xml"/>
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath*:com/personalizednewsrecommendation/manager/mapper/*.xml"/>
+		<property name="dataSource" ref="dataSource" />	
+	</bean>
+     
+	<!-- 根据指定的Mapper接口生成Bean实例 -->
+	<!-- <bean id="productDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.amos.dao.ProductDao" />
+		<property name="sqlSessionFactoryBeanName" ref="sqlSessionFactory" />
+	</bean> -->
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<!-- 配置Mapper扫描器 -->
+	<!-- 
+	No MyBatis mapper was found in ‘XXX’ package. 
+	Please check your configuration
+            这是因为配置文件里多了一条内容：
+    -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.personalizednewsrecommendation.manager.dao" />
+		<!-- 注意:下边这句是在有多个sqlSessionFactory时加的,
+        同时,注意它的name和value,后边的不能是ref -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+    
+</beans>

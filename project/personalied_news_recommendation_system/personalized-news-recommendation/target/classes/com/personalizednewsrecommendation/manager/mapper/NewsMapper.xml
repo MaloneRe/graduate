@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personalizednewsrecommendation.manager.dao.NewsDAO">
+    <insert id="insertNews" parameterType="News"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into news(title, url, imgurl, catalog_id, media, content, gmt_create)
+        <if test=" time == null">
+            values(#{title}, #{url}, #{imageUrl}, #{categoryId}, #{media}, #{content}, NOW())  
+        </if>
+         <if test=" time != null">
+             values(#{title}, #{url}, #{imageUrl}, #{categoryId}, #{media}, #{content}, #{time})  
+         </if>
+    </insert>
+    <insert id="insertNewses" parameterType="java.util.List">
+        
+        <foreach collection="newses" 
+            item="item" index="index" 
+            separator=";">
+          <!--   open="(" close=")" separator="union all"> -->
+            insert into news(title, url, imgurl, catalog_id, media, content)
+        	values(#{item.title}, #{item.url}, #{item.imageUrl}
+            , #{item.categoryId}, #{item.media}, #{item.content})
+        </foreach>
+    </insert>
+    
+    <select id="getNewsById" parameterType="Long" resultMap="NewsMap">
+        select * 
+        from news
+        where id = #{id}
+    </select>
+    <resultMap type="News" id="NewsMap">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="url" column="url"/>
+        <result property="imageUrl" column="imgurl"/>
+        <result property="media" column="media"/>
+        <result property="content" column="content"/>
+        <result property="time" column="gmt_create"/>
+        <result property="categoryId" column="catalog_id"/>
+    </resultMap>
+    
+    <select id="getNewsesByName" parameterType="String" resultMap="NewsesMap">
+        select * 
+        from news
+        where title like concat('%', #{title},'%')  
+    </select>
+    <select id="getNewsesById" parameterType="Long" resultMap="NewsesMap">
+        select * 
+        from news
+        where catalog_id = #{categoryId}  
+    </select>
+     <select id="getByUrlAndTitle"  resultMap="NewsMap">
+        select * 
+        from news
+        where title = #{title} and url = #{url}  
+    </select>
+    <resultMap type="News" id="NewsesMap">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="url" column="url"/>
+        <result property="imageUrl" column="imgurl"/>
+        <result property="media" column="media"/>
+        <result property="content" column="content"/>
+        <result property="time" column="gmt_create"/>
+        <result property="categoryId" column="catalog_id"/>
+    </resultMap>
+    
+   <select id="getAll" parameterType="String" resultMap="NewsesMap">
+        select * 
+        from news 
+    </select>
+    
+    <update id="updateNews" parameterType="News">
+        update News 
+         <set>
+            <if test="id != null">
+              id = #{id}, 
+            </if>
+            <if test="title != null">
+              title = #{title}, 
+            </if>
+            <if test="url != null">
+              url = #{url}, 
+            </if>
+            <if test="imageUrl != null">
+              imgurl = #{imageUrl}, 
+            </if>
+            <if test="media != null">
+              media = #{media}, 
+            </if>
+            <if test="media != null">
+              catalog_id = #{categoryId}, 
+            </if>
+            <if test="content != null">
+              cpnten = #{conten}, 
+            </if>
+            <if test="time != null">
+              gmt_modified = time
+            </if>
+        </set>
+        <where>
+            <if test="id != null and title == null">
+                id = #{id}
+            </if>
+            <if test="id == null and title != null">
+                and title = #{title}
+            </if>
+            <if test="id != null and title != null">
+                and  id = #{id}
+            </if>
+        </where>
+    </update>
+    
+    <delete id="deleteNews" parameterType="News">
+        delete from news
+        <where>
+            <if test="id == null">
+                <choose>
+                    <when test="title != null">
+                        title = #{title}
+                    </when>
+                    <when test="url != null">
+                        and url = #{url}
+                    </when>
+                    <otherwise>
+                        
+                    </otherwise>
+                </choose>
+            </if>
+            <if test=" id != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+</mapper>

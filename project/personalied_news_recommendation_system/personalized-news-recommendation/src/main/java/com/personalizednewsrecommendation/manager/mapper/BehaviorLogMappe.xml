@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personalizednewsrecommendation.manager.dao.BehaviorLogDAO">
+	<insert id="insertLog" parameterType="BehaviorLog"
+         useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO behavior_logs(user_id, news_id
+        , click, reading, comment, collect, forward, other)
+        VALUES(#{uid}, #{nid}
+        , #{click}, #{read}, #{comment}, #{collect}, #{forward}, #{other})
+    </insert>
+    
+    <select id="getById" parameterType="Long" resultMap="BehaviorLogMap">
+        select * from behavior_logs where id = #{id}
+    </select>
+    <resultMap type="BehaviorLog" id="BehaviorLogMap">
+        <id property="id" column="id"/>
+        <result property="uid" column="user_id"/>
+        <result property="nid" column="news_id"/>
+        <result property="click" column="click"/>
+        <result property="read" column="reading"/>
+        <result property="comment" column="comment"/>
+        <result property="collect" column="collect"/>
+        <result property="forward" column="forward"/>
+        <result property="other" column="other"/>
+        <result property="creation" column="gmt_create"/>
+        <result property="modified" column="gmt_modified"/>      
+    </resultMap>
+    <resultMap type="BehaviorLog" id="BehaviorLogsMap">
+        <id property="id" column="id"/>
+        <result property="uid" column="user_id"/>
+        <result property="nid" column="news_id"/>
+        <result property="click" column="click"/>
+        <result property="read" column="reading"/>
+        <result property="comment" column="comment"/>
+        <result property="collect" column="collect"/>
+        <result property="forward" column="forward"/>
+        <result property="other" column="other"/>
+        <result property="creation" column="gmt_create"/>
+        <result property="modified" column="gmt_modified"/>      
+    </resultMap>
+    <parameterMap type="Map" id="paramMap">
+        <parameter property="userid" javaType="Long"/>
+        <parameter property="newsid" javaType="Long"/>
+    </parameterMap>
+    
+    <select id="getByIds" parameterMap="paramMap" resultMap="BehaviorLogMap">
+        select * from behavior_logs
+        where user_id = #{userid} and news_id = #{newsid}
+    </select>
+    <select id="getByUidNid" resultMap="BehaviorLogMap">
+        select *from behavior_logs
+        where user_id = #{0} and news_id = #{1}
+    </select>
+    <select id="getByUserId" parameterType="Long" resultMap="BehaviorLogsMap">
+        select * from behavior_logs
+        where user_id = #{uid}
+    </select>
+    <select id="getAll" resultMap="BehaviorLogsMap">
+        select * from behavior_logs
+    </select>
+    <select id="getByNewsId" parameterType="Long" resultMap="BehaviorLogsMap">
+        select * from behavior_logs
+        where news_id = #{nid}
+    </select>
+    
+    
+    <update id="updateClick" >
+        update behavior_logs
+        set click = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateRead" >
+        update behavior_logs
+        set reading = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateComment" >
+        update behavior_logs
+        set comment = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateCollect" >
+        update behavior_logs
+        set collect = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateForward" >
+        update behavior_logs
+        set forward = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateOther" >
+        update behavior_logs
+        set other = #{otherCount}
+        where id = #{0}
+    </update>
+</mapper>

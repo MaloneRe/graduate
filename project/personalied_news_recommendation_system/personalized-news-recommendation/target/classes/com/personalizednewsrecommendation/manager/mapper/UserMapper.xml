@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personalizednewsrecommendation.manager.dao.UserDAO">
+    <!-- 
+    <resultMap type="Employee" id="employeeMap">
+        <id property="id" column="e_id"/>
+        <result property="name" column="e_name"/>
+        <result property="gender" column="e_gender"/>
+        <result property="email" column="e_email"/>
+        <result property="tel" column="e_tel"/>
+        <association property="department" javaType="Department">
+            <id property="id" column="d_id"/>
+            <result property="name" column="d_name"/>
+        </association>
+    </resultMap> 
+
+    <select id="queryAll" resultMap="employeeMap">
+        select * from employee e, department d where e.d_id = d.d_id
+    </select>
+ 	-->
+ 	<insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO USERS(name,password)
+        VALUES(#{name}, #{password})
+    </insert>
+    
+ 	<!-- <resultMap type="User" id="userMap">
+        <id property="id" column="id" javaType="java.lang.Long"/>
+        <result property="name" column="name" javaType="java.lang.String"/>
+        <result property="password" column="password" javaType="java.lang.String"/>
+    </resultMap> 
+    <select id="getUserById" parameterType="java.lang.Long"
+        resultType="userMap">
+        SELECT * FROM USER WHERE id = #{id}
+    </select> -->
+    
+    <!-- <resultMap type="User" id="User">
+        <id property="id" column="id" />
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+    </resultMap> 
+    -->
+    <select id="getIdByName" parameterType="String"
+        resultType="java.lang.Long">
+        SELECT id FROM USERS WHERE name = #{name}
+    </select>
+    <resultMap type="User" id="user">
+        <id property="id" column="id" />
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="time" column="gmt_create"/>
+    </resultMap>
+    <select id="getUserByName" parameterType="String"
+        resultMap="user">
+        SELECT * FROM USERS WHERE name = #{name}
+    </select>
+    <select id="getUserById" parameterType="Long" resultMap="user">
+        SELECT * FROM USERS WHERE id = #{id}  
+    </select>
+</mapper>

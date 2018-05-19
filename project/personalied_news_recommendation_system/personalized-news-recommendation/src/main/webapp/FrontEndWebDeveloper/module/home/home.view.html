@@ -1,0 +1,148 @@
+<div class="home" layout="column" layout-align="center none">
+  <md-content layout="column" layout-align="center none">
+    <md-toolbar layout="column" layout-align="center" flex>
+      <div class="md-toolbar-tools" >
+        <h3>
+          <span>个性化新闻推荐系统</span>
+        </h3>
+        <span flex></span>
+        <div ng-if="!globals.currentUser">
+          <!-- 如果为登录显示这个div -->
+          <md-button class="md-fab md-mini"
+          aria-label="Favorite"
+          ng-click="vm.login('/login')">
+            <md-tooltip md-direction="bottom">登录</md-tooltip>
+            <md-icon md-svg-icon="images/login32.svg"></md-icon>
+          </md-button>
+        </div>
+        <div layout="row" ng-if="globals.currentUser">
+          <span><p>hi {{user.name}}</p></span>
+          <md-menu-bar>          
+            <md-menu>
+              <md-button  class="md-fab md-mini md-primary" ng-mouseenter=" $mdMenu.open()">
+                <md-icon class="md-secondary" md-svg-icon="images/user.svg"/>
+              </md-button>
+              <md-menu-content width="1.5" ng-mouseleave="$mdMenu.close()">
+                <md-menu-item>
+                  <md-button ng-click="test('login')">
+                    退出
+                  </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                  <md-button ng-click="test('login')">
+                    修改用户
+                  </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                  <md-button ng-click="test('login')">
+                    用户详情
+                  </md-button>
+                </md-menu-item>
+              </md-menu-content>
+            </md-menu>
+          </md-menu-bar>
+       </div>
+      </div>
+    </md-toolbar>
+    <md-content flex="80" layout="column" layout-align="center">
+      <md-nav-bar
+        md-no-ink-bar="disableInkBar"
+        md-selected-nav-item="currentNavItem"
+        nav-bar-aria-label="navigation links">
+          <md-nav-item md-nav-click="goto('recommend')" name="recommend">
+          推荐新闻
+          </md-nav-item>
+          <md-nav-item md-nav-click="goto('domestic')" name="domestic">
+          国内
+          </md-nav-item>
+          <md-nav-item md-nav-click="goto('world')" name="world">
+          国际
+          </md-nav-item>
+          <md-nav-item md-nav-click="goto('government')" name="government">
+          政务
+          </md-nav-item>
+          <md-nav-item md-nav-click="goto('society')" name="society">
+          社会
+          </md-nav-item>
+          <md-nav-item md-nav-click="goto('war')" name="war">
+          战争
+          </md-nav-item>
+          <md-nav-item md-nav-click="goto('air')" name="air">
+          航空
+          </md-nav-item>
+          <md-nav-item md-nav-click="goto('UAV')" name="UAV">
+          无人机
+          </md-nav-item>
+      </md-nav-bar>
+     <!--  {{currentNavItem}} -->
+      <div class="ext-content" flex layout="row">
+        <md-content flex="70">
+          <md-list>
+            <md-list-item class="md-2-line"
+              ng-repeat="item in news"
+              ng-click="null">
+              <img ng-src="{{item.imageurl}}" alt="{{item.title}}" class="md-avatar">
+              <div class="md-list-item-text" 
+                  layout="row"
+                  layout-align="none center "
+                  data-id="12"
+                  data-docurl="{{item.url}}">
+                  <h3 
+                    layout="column"
+                    layout-align="center none">
+                    {{item.title}} 
+                  </h3>
+                  <h4>{{item.time}} </h4>
+                  <span flex></span>
+                  <p>
+                    {{item.content}} 
+                  </p>
+              </div>
+              <md-divider inset></md-divider>
+            </md-list-item>
+          </md-list>
+        </md-content>
+        <md-sidenav
+          class="md-sidenav-right"
+          md-component-id="right"
+          md-is-locked-open="$mdMedia('gt-xs')"
+          md-whiteframe="4" flex-offset="4" flex="26">
+
+          <md-toolbar class="md-theme-indigo">
+            <h3 class="md-toolbar-tools">今日热点新闻</h3>
+          </md-toolbar>
+            <md-content flex>
+              <md-list>
+                <md-list-item class="md-3-line" ng-repeat="item in news">
+                  <img ng-src="{{item.imageurl}}" alt="{{item.title}}" class="md-avatar">
+                    <div class="md-list-item-text">
+                      <h3>{{item.title}}</h3>
+                      <h4>{{item.title}}</h4>
+
+                      <p>
+                      {{item.content}}
+                      </p>
+                    </div>
+                    <md-divider inset></md-divider>
+                </md-list-item>
+              </md-list>
+            </md-content>
+        </md-sidenav>
+      </div>
+    </md-content>
+    <md-toolbar layout="column"
+     layout-align="center"
+     ng-if=""
+     flex>
+      <div class="md-toolbar-tools" layout="column"
+       layout-align="center center" >
+       <span flex>制作者：张慧</span>
+       <span flex>专业：物联网工程</span>
+       <span flex>班级：14058911</span>
+      </div>
+    </md-toolbar>
+    <footer flex>
+    </footer>
+  </md-content>
+  
+</div>

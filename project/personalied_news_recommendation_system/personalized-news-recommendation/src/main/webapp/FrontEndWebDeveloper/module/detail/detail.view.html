@@ -1,0 +1,87 @@
+<div class="detail" layout="column" layout-align="center none" ng-cloak>
+    <md-content layout="column" layout-align="center none">
+		<md-toolbar layout="row" layout-align="center" flex>
+        	<div class="md-toolbar-tools"
+        	 layout="row"  flex>
+        	 	<div flex>
+        	 		<md-button class="md-fab md-mini md-icon-button"
+         			aria-label="back"
+         			style="color: blue;"
+         			ng-click="vm.goBack('/')">
+          				<md-tooltip md-direction="bottom">返回</md-tooltip>
+          				<md-icon md-svg-icon="images/back32.svg"
+          			 	style="color: blue;"></md-icon>
+        			</md-button>
+        	 	</div>
+      			<h3 >
+        			<span>个性化新闻推荐系统</span>
+      			</h3>
+      			<div flex></div>
+    		</div>
+    	</md-toolbar>
+
+    	<md-divider/>
+    	<md-conten layout="column" layout-align="center none" flex>
+    		 <md-input-container class="md-block">
+          		<label>
+          			<md-icon 
+          			md-svg-icon="images/comment.svg"></md-icon>
+          			评论
+          		</label>
+          		<textarea ng-model="vm.comment.content" md-maxlength="150" rows="2" md-select-on-focus></textarea>
+          		<!-- {{vm.comment.content}} -->
+          		<md-button class="md-raised"
+          		 aria-label="submit">
+          			<md-icon md-svg-icon="images/commit32.svg"
+          			 style="color: greenyellow;"></md-icon>
+          			<md-tooltip md-direction="bottom">
+          				 提交
+          			</md-tooltip>
+        		</md-button>
+        	</md-input-container>
+    	</md-conten>
+    	<md-content>
+    		<md-list flex>
+        		<md-subheader class="md-primary md-no-sticky">
+        			<label>
+          			<md-icon 
+          				md-svg-icon="images/commentl.svg">
+          				
+          			</md-icon>
+          			评论列表
+          			</label>
+        		</md-subheader>
+        		<!-- 
+        			<img ng-src="images/avatar32.svg" class="md-avatar"/>
+        		-->
+        		<md-list-item class="md-2-line" ng-repeat="item in vm.comment" ng-click="vm.test(item)">
+          			<!-- <img ng-src="images/avatar32.svg" class="md-avatar" alt="{{item.content}}" /> -->
+          			<div class="md-list-item-text"
+          			 layout="row" 
+          			 layout-align="center none"
+          			 data-id="{{item.id}}">
+          			<img ng-src="images/avatar32.svg" class="md-avatar" alt="{{item.content}}" />
+            		<!-- <h3>{{ item.who }}</h3> -->
+            		<h4 flex layout="column" layout-align="center none">
+            			<span>
+            				{{ item.content }}
+            			</span>
+            		 
+            		</h4>
+            		<p layout="column" layout-align="center none">{{ item.time }}</p>
+          			</div>
+          		<md-divider ></md-divider>
+        		</md-list-item>
+        		<md-divider ></md-divider>
+        	</md-list>
+    	</md-content>
+	</md-content>
+	 <md-divider/>
+	<!-- <div>
+		<md-icon md-svg-icon="images/back32.svg"
+          	style="color: blue;">
+          	<md-tooltip md-direction="bottom">返回</md-tooltip>
+        </md-icon>
+	
+	</div> -->
+</div>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+    
+    <!-- 引入多个properties文件 的一种方法-->
+    
+    <!--基于占位符方式 配置多个properties -->
+    <bean id="preferencesPlaceholderConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:properties/jdbc.properties</value>
+				<value>classpath*:properties/cron.properties</value>
+				<value>classpath*:properties/log4j.properties</value>
+				<value>classpath*:properties/activemq.properties</value>
+				<value>classpath*:properties/mongodb.properties</value>
+            </list>
+      </property>
+      <property name="fileEncoding" value="utf-8"/>
+    </bean>
+    <!--基于SpEL表达式 配置多个properties id值为configProperties 提供java代码中使用 -->
+    <!-- <bean id="propertiesFactoryBean"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath*:properties/jdbc.properties</value>
+				<value>classpath*:properties/cron.properties</value>
+				<value>classpath*:properties/log4j.properties</value>
+				<value>classpath*:properties/activemq.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="utf-8"/>
+	</bean>
+    <bean id="preferencesPlaceholderConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+    	<property name="properties" ref="propertiesFactoryBean" />
+	</bean> -->
+	
+	<!-- <context:property-placeholder location="classpath*:properties/*.properties"/> -->
+    <import resource="classpath:spring/applicationContext-*.xml"/>
+    <import resource="classpath:swagger/swagger-config.xml"/>
+    <!-- <import resource="classpath:spring/applicationContext-quartz.xml"/> -->
+    
+</beans>

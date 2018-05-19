@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+                        http://www.springframework.org/schema/jms
+        			    http://www.springframework.org/schema/jms/spring-jms-4.3.xsd
+        			    http://activemq.apache.org/schema/core
+        				http://activemq.apache.org/schema/core/activemq-core-5.15.3.xsd">
+    
+    <!-- 加载配置文件 -->
+   <!-- <context:property-placeholder location="classpath:properties/activemq.properties" 
+       ignore-unresolvable="true"/> -->
+  <!-- <context:component-scan base-package=""/> -->
+  
+  <bean id="amqConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+	    <property name="brokerURL" value="${activemq.brokerURL}"/>
+	    <property name="userName" value="${activemq.userName}" />
+	    <property name="password" value="${activemq.password}" />
+	    <property name="trustAllPackages" value="true"/>
+	    <!-- 
+	                  指定了trustedPackages。ActiveMQ自5.12.2版本之后，
+	                 强制用户指定一份可信任的packages白名单，以对付ObjectMessage存在的安全漏洞。
+	    -->
+	    <!-- <property name="trustedPackages">
+	        <list>
+	            
+	        	<value>java.lang</value>
+	        	<value>javax.security</value>
+	        	<value>java.util</value>
+	        	<value>org.apache.activemq</value>
+	            <value>cn.zifangsky.activemq</value>
+	            <value>cn.zifangsky.model</value>
+	        </list>
+	    </property> -->
+	</bean>
+  	<bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+   	 	<property name="connectionFactory" ref="amqConnectionFactory"/>
+	</bean>
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    	<property name="configuration" ref="jmsConfig"/>
+	</bean>
+   
+   <!--  <amq:connectionFactory id="amqConnectionFactory"
+        brokerURL="${activemq.brokerURL}" 
+        userName="${activemq.userName}" password="${activemq.password}" /> -->
+    
+    <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 -->    
+    <!-- <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">    
+        ActiveMQ服务地址    
+        <property name="brokerURL" value="${activemq.brokerURL}"/>    
+        <property name="userName" value="${activemq.userName}"/>    
+        <property name="password" value="${activemq.password}"/>    
+        这里定义重试策略,注意：只有持久化的才会重试    
+        <property name="redeliveryPolicyMap" ref="redeliveryPolicyMap"/>    
+    </bean>     -->
+    
+    <!--这里设置各个消息队列的重发机制-->    
+    <!-- <bean id="redeliveryPolicyMap" class="org.apache.activemq.broker.region.policy.RedeliveryPolicyMap">    
+        <property name="redeliveryPolicyEntries">    
+            <list>    
+                <ref bean="smsRedeliveryPolicy"/>    
+                <ref bean="mailRedeliveryPolicy"/>    
+            </list>    
+        </property>    
+    </bean>   -->
+      
+    <!-- <bean id="smsRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">    
+        重发次数 延时、延时系数、延时指数开关、目标（重发等待时间1s, 2s, 4s, 8s）    
+        <property name="maximumRedeliveries" value="3"/>    
+        <property name="redeliveryDelay" value="1000"/>    
+        <property name="backOffMultiplier" value="2"/>    
+        <property name="useExponentialBackOff" value="true"/>    
+        <property name="destination" ref="smsQueue"/>    
+    </bean>     -->
+  <!--   <bean id="mailRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">    
+        重发次数 延时、延时系数、延时指数开关    
+        <property name="maximumRedeliveries" value="2"/>    
+        <property name="redeliveryDelay" value="5000"/>    
+        <property name="destination" ref="mailQueue"/>    
+    </bean>     -->
+    
+    <!--    
+        ActiveMQ为我们提供了一个PooledConnectionFactory，通过往里面注入一个ActiveMQConnectionFactory    
+        可以用来将Connection、Session和MessageProducer池化，这样可以大大的减少我们的资源消耗。    
+        要依赖于 activemq-pool包    
+     -->    
+    <!-- <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">    
+        <property name="connectionFactory" ref="targetConnectionFactory"/>    
+        <property name="maxConnections" value="${mq.pool.maxConnections}"/>    
+    </bean>     -->
+    
+    <!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory -->    
+    <!-- <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">    
+        目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory    
+        <property name="targetConnectionFactory" ref="pooledConnectionFactory"/>    
+        <property name="reconnectOnException" value="true"/>
+         同上，同理
+        <constructor-arg ref="targetConnectionFactory" />
+        Session缓存数量
+         <property name="sessionCacheSize" value="100" />    
+    </bean>    
+     -->
+    
+    <!-- 队列目的地-->    
+   <!--  <bean id="smsQueue" class="org.apache.activemq.command.ActiveMQQueue">    
+        <constructor-arg index="0" value="${sms.queueName}"/>    
+    </bean>    
+    <bean id="mailQueue" class="org.apache.activemq.command.ActiveMQQueue">    
+        <constructor-arg index="0" value="${mail.queueName}"/>    
+    </bean>     -->
+    
+    
+    <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->    
+    <!-- 队列模板 这里配置2个，一个用于分布式业务，一个用于发送邮件-->    
+    <!-- <bean id="smsMqJmsTemplate" class="org.springframework.jms.core.JmsTemplate">    
+        这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象    
+        <property name="connectionFactory" ref="connectionFactory"/>    
+        <property name="defaultDestination" ref="smsQueue"/>    
+        使 deliveryMode, priority, timeToLive设置生效    
+        <property name="explicitQosEnabled" value="true" />    
+        持久化 如果设置为非持久化MQ服务器重启后MQ中的数据会丢失    
+        <property name="deliveryPersistent" value="true"/>    
+        这里注意:如果不开启事务，消息在异常的情况下是不会重试的    
+        <property name="sessionTransacted" value="false"/>    
+    </bean>    
+    
+    <bean id="mailMqJmsTemplate" class="org.springframework.jms.core.JmsTemplate">    
+        这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象    
+        <property name="connectionFactory" ref="connectionFactory"/>    
+        <property name="defaultDestination" ref="mailQueue"/>    
+        使 deliveryMode, priority, timeToLive设置生效    
+        <property name="explicitQosEnabled" value="true" />    
+        持久化 如果设置为非持久化MQ服务器重启后MQ中的数据会丢失    
+        <property name="deliveryPersistent" value="true"/>    
+        这里注意:如果不开启事务，消息在异常的情况下是不会重试的    
+        <property name="sessionTransacted" value="true"/>    
+    </bean>    
+    
+    消息监听实现方法一    
+    <bean id="smsListener" class="com.cn.ssm.mq.listener.SmsMessageListener"/>    
+    <bean id="mailListener" class="com.cn.ssm.mq.listener.MailMessageListener"/>    
+    
+    
+    消息接收监听器用于异步接收消息    
+    <bean id="smsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">    
+        <property name="connectionFactory" ref="connectionFactory"/>    
+        <property name="destination" ref="smsQueue"/>    
+        <property name="messageListener" ref="smsListener"/>    
+        这里注意:如果不开启事务，消息在异常的情况下是不会重试的    
+        <property name="sessionTransacted" value="true"/>   
+    同时启动几个listener消费消息  或者可使用   
+        <property name="concurrency" value="4-8"/>   
+        可以根据消息队列中的消息规模自动调整并行数量，最小4， 最大8个。          
+    <property name="concurrentConsumers" value="1"/>   
+    </bean>  
+
+	可定义多个消息监听容器，监听不同队列内容  
+    <bean id="mailContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">    
+        <property name="connectionFactory" ref="connectionFactory"/>    
+        <property name="destination" ref="mailQueue"/>    
+        <property name="messageListener" ref="mailListener"/>    
+        这里注意:如果不开启事务，消息在异常的情况下是不会重试的    
+        <property name="sessionTransacted" value="true"/>    
+        <property name="concurrentConsumers" value="1"/>    
+    </bean>     -->
+    
+    <!-- Spring Caching连接工厂 -->
+    <!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory -->  
+    <bean id="cachingConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->  
+        <property name="targetConnectionFactory" ref="amqConnectionFactory"/>
+        <!-- 同上，同理 -->
+        <!-- <constructor-arg ref="amqConnectionFactory" /> -->
+        <!-- Session缓存数量 -->
+        <property name="sessionCacheSize" value="100" />
+    </bean>
+    
+    
+    <!-- start -->
+    <!-- Queue模式
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg name="name" value="${activemq.queue_name}"/>
+    </bean> 
+    Topic模式
+    <bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg name="name" value="${activemq.topic_name}"/>
+    </bean>
+
+    配置消费者
+    <bean id="myMessageListener" class="jit.wxs.search.activemq.MyMessageListener"/>
+    消息监听容器
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="cachingConnectionFactory" />
+        <property name="destination" ref="queueDestination" />
+        <property name="messageListener" ref="myMessageListener" />
+    </bean> -->
+    <!-- end -->
+    
+    
+     <!-- Spring JmsTemplate 的消息生产者 start-->
+     <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->  
+        <constructor-arg ref="cachingConnectionFactory" />
+        <!-- 非pub/sub模型（发布/订阅），即队列模式 -->
+        <property name="pubSubDomain" value="false" />
+    </bean>
+    <!-- 定义JmsTemplate的Topic类型 -->
+    <bean id="jmsTopicTemplate" class="org.springframework.jms.core.JmsTemplate">
+         <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->  
+        <constructor-arg ref="cachingConnectionFactory" />
+        <!-- pub/sub模型（发布/订阅） -->
+        <property name="pubSubDomain" value="true" />
+    </bean>
+    <!--Spring JmsTemplate 的消息生产者 end-->
+    <!-- 定义Queue监听器 -->
+    <jms:listener-container destination-type="queue" container-type="default" connection-factory="cachingConnectionFactory" acknowledge="auto">
+        <jms:listener destination="test.queue" ref="queueReceiver"/> 
+      	<jms:listener destination="crawlProcess.queue" ref="crawlQueueReceiver"/>
+    </jms:listener-container>
+    <!-- 定义Topic监听器 -->
+    <jms:listener-container destination-type="topic" container-type="default" connection-factory="cachingConnectionFactory" acknowledge="auto">
+        <jms:listener destination="test.topic" ref="topicReceiver"/>
+     
+    </jms:listener-container>
+    <!--
+    <jms:listener-container connection-factory="cachingConnectionFactory" destination-type="topic">
+            <jms:listener destination="study.topic.simple" ref="consumerService" method="receiveTopicMessage"/>
+            <jms:listener destination="study.topic.simple" ref="consumerService" method="receiveTopicMessage2"/>
+    </jms:listener-container> 
+    -->
+    <!-- 
+             上面brokerURL需填写activeMQ安装的地址，因为我是本地安装，所以这么写。
+             消息监听器容器中声明了接收者其中destination声明一个queue或者topic名称。
+     ref声明接收者的类 ,method声明方法。如果该类继承了MessageListener则
+            可以不用写method方法，会默认调用onMessage()方法来接收消息。
+     -->
+    <!-- 消息消费者 end -->
+    
+    <!--   -->
+    
+    <!-- 定义消息队列（Queue） -->
+    <!-- <bean id="demoQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        设置消息队列的名字
+        <constructor-arg>
+            <value>Jaycekon</value>
+        </constructor-arg>
+    </bean>
+
+    配置JMS模板（Queue），Spring提供的JMS工具类，它发送、接收消息。
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="defaultDestination" ref="demoQueueDestination" />
+        <property name="receiveTimeout" value="10000" />
+        true是topic，false是queue，默认是false，此处显示写出false
+        <property name="pubSubDomain" value="false" />
+    </bean>
+
+
+    配置消息队列监听者（Queue）
+    <bean id="queueMessageListener" class="com.Jayce.Filter.QueueMessageListener" />
+
+    显示注入消息监听容器（Queue），配置连接工厂，监听的目标是demoQueueDestination，监听器是上面定义的监听器
+    <bean id="queueListenerContainer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destination" ref="demoQueueDestination" />
+        <property name="messageListener" ref="queueMessageListener" />
+    </bean>
+     -->
+    
+    
+</beans>

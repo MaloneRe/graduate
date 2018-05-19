@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="app" ng-cloak>
+	<head>
+		<meta charset="utf-8"/>
+		<title>新闻可推荐系统</title>
+		<link href="lib/angular-material.css" rel="stylesheet">
+		<link href="module/login/app-content/app.css" rel="stylesheet" />
+		<link href="css/bootstrap.css" rel="stylesheet"/>
+	</head>
+	<body>
+	   <div class="jumbotron">
+      		<div class="container">
+            	<div class="col-*-10 col-*-offset-1">
+                	<div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+                	<div  ng-view></div>
+            	</div>
+        	</div>
+      </div>
+  		<script src="lib/angular.js"></script>
+  		<script src="lib/angular-animate.js"></script>
+  		<script src="lib/angular-route.js"></script>
+  		<script src="lib/angular-aria.js"></script>
+  		<script src="lib/angular-messages.js"></script>
+  		<script src="lib/angular-material.js"></script>
+  		<script src="lib/angular-cookies.js"></script>
+  		<script type="text/javascript" src="lib/jquery.js"></script>
+      <script src="app.module.js"></script>
+
+  		
+    	<script src="module/login/app-services/flash.service.js"></script>
+
+    	<!-- Real user service that uses an api -->
+    	<!-- <script src="app-services/user.service.js"></script> -->
+   	 	<!-- Fake user service for demo that uses local storage -->
+    	<!-- <script src="module/login/app-services/user.service.local-storage.js"></script> -->
+      <script src="module/login/app-services/user.service.js"></script>
+      <script src="module/login/app-services/authentication.service.js"></script>
+    	<!-- <script src="module/login/home/home.controller.js"></script> -->
+    	<script src="module/login/login/login.controller.js"></script>
+    	<script src="module/login/register/register.controller.js"></script>
+      <script src="module/detail/detail.controller.js"></script>
+      <script type="text/javascript" src="js/app.js"></script>
+      <script src="module/home/home.controller.js"></script>
+	</body>
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd ">
+
+    <context:component-scan base-package="com.personalizednewsrecommendation.manager.timer.job" /> 
+
+    <!-- 注入任务处理类bean -->
+    <!-- 自定义的任务两个myjob、otherjob -->
+    <!-- <bean id="myJob" class="com.lyt.timer.job.MyJob"></bean>
+    <bean id="otherJob" class="com.lyt.timer.job.OtherJob"></bean> -->
+
+	<!-- 加载cron文件 -->
+    <!-- <context:property-placeholder location="classpath:properties/cron.properties" 
+        ignore-unresolvable="true"/> -->
+    
+    <!--     
+    <bean id="newsUpdateJob" class="com.personalizednewsrecommendation.manager.timer.job.NewsUpdateJob"></bean>
+    -->    
+    <!-- 任务触发器详细信息bean -->
+    <!--  -->
+    <!-- <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="myJob"></property>
+        <property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="false" />作业不并发调度 
+    </bean>
+    <bean id="otherDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="otherJob"></property>
+        <property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="false" />作业不并发调度 
+    </bean> -->
+    
+   <!-- <bean id="newsDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="newsUpdateJob"></property>
+        <property name="targetMethod" value="executeInternal"></property>
+        <property name="concurrent" value="false" />作业不并发调度 
+    </bean> -->
+
+    <bean id="newsJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.personalizednewsrecommendation.manager.timer.job.NewsUpdateJob"/>
+		<property name="durability" value="true" />
+		<!-- 
+		如果一个job是可恢复的，并且在其执行的时候，scheduler发生硬关闭，
+		则当scheduler重新启动的时候，该job会被重新执行
+		 -->
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+	
+    <bean id="recommenderJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.personalizednewsrecommendation.manager.timer.job.RecommenderJob"/>
+		<property name="durability" value="true" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+    <!-- 定义trigger 触发器 -->
+    <!-- <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail"></property>
+        <property name="cronExpression" value="${cron.news.update}"></property>
+    </bean>
+    <bean id="otherTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="otherDetail"></property>
+        <property name="cronExpression" value="${cron.news.update}"></property>
+    </bean> -->
+
+	<bean id="newsUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="newsJobDetail"></property>
+        <property name="cronExpression" value="${cron.news.update}"></property>
+    </bean>
+    <bean id="recommenderTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="recommenderJobDetail"></property>
+        <property name="cronExpression" value="${cron.news.recommend}"></property>
+    </bean>
+    <!-- 设置触发器调度工厂 -->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobDetails">  
+            <list>  
+                <ref bean="newsJobDetail" />  
+                <ref bean="recommenderJobDetail"/>
+            </list>  
+        </property>  
+        <property name="triggers">
+           <list>
+                <ref bean="newsUpdateTrigger"/>
+                <ref bean="recommenderTrigger"/>
+           </list>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 扩充了注解驱动，可以将请求参数绑定到控制器参数 -->
+	<!-- 启用MVC注解 -->
+	<mvc:annotation-driven />
+	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+	<context:component-scan
+		base-package="com.personalizednewsrecommendation.manager.controller" />
+	<!-- 静态资源处理 css js imgs -->
+	<!-- <mvc:resources location="/resources/**" mapping="/resources"/> -->
+	<mvc:resources location="/FrontEndWebDeveloper/lib/"
+		mapping="/lib/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/images/"
+		mapping="/images/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/js/"
+		mapping="/js/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/css/"
+		mapping="/css/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/module/login/app-services/"
+		mapping="/module/login/app-services/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/module/login/app-content/"
+		mapping="/module/login/app-content/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/module/login/home/"
+		mapping="/module/login/home/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/module/login/login/"
+		mapping="/module/login/login/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/module/login/register/"
+		mapping="/module/login/register/**" />
+
+
+	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->
+		<property name="prefix" value="/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<mvc:default-servlet-handler />
+
+	<!-- 我的拦截器 ,拦截一些请求记录好记录日志 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- <mvc:mapping path="/**" /> -->
+			<mvc:mapping path="/api/news/*/content"/>
+			<mvc:mapping path="/api/*/comment"/>
+			<mvc:mapping path="/api/*"/>
+			<mvc:exclude-mapping path="/api/todaynews"/>
+			<mvc:exclude-mapping path="/api/users"/>
+			<mvc:exclude-mapping path="/api/recommender"/>
+			<mvc:exclude-mapping path="/api/users/*"/>
+			<bean id="logInterceptor"
+				class="com.personalizednewsrecommendation.manager.log.LogInterceptor" />
+			<!-- <property name="exceptUrls">
+				<list>
+					<value>/api/users/*</value>
+				</list>
+			</property> 
+			-->
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+
+</beans>
