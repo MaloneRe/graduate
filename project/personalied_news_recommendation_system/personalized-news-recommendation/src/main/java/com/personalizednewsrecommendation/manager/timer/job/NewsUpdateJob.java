@@ -10,6 +10,8 @@ import com.personalizednewsrecommendation.manager.spider.CallbackDataPipline;
 
 import com.personalizednewsrecommendation.manager.spider.*;
 
+import junit.framework.Assert.*;
+
 public class NewsUpdateJob extends QuartzJobBean {
 
 	private static Logger log=LoggerFactory.getLogger(NewsUpdateJob.class);
@@ -19,7 +21,7 @@ public class NewsUpdateJob extends QuartzJobBean {
 		// TODO Auto-generated method stub
 		System.out.println(context.getClass().toGenericString());
 		log.info("定时任务启动，爬取新闻存到数据库");
-		//CrawlTask.runSpider();
+		CrawlTask.runSpider();
 	}
 
 }

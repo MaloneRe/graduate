@@ -24,13 +24,15 @@ public class StatisticsThreadExecutor {
 	private static UserService userService;
 	private static NewsService newsService;
 	
+	
 	@Resource(name = "userService")
-	public UserService getUserService() {
-		return userService;
+	public  void setUserService(UserService userService) {
+		StatisticsThreadExecutor.userService = userService;
 	}
+	
 	@Resource(name = "newsService")
-	public NewsService getNewsService() {
-		return newsService;
+	public  void setNewsService(NewsService newsService) {
+		StatisticsThreadExecutor.newsService = newsService;
 	}
 
 	public static Map<String, Object> getResult(int at){

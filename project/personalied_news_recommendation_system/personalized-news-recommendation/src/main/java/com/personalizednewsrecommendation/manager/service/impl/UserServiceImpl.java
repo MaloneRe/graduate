@@ -9,7 +9,7 @@ import com.personalizednewsrecommendation.manager.dao.UserDAO;
 import com.personalizednewsrecommendation.manager.pojo.User;
 import com.personalizednewsrecommendation.manager.service.UserService;
 
-@Service("userSerivce")
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
 	@Autowired

@@ -6,7 +6,7 @@
           <span>个性化新闻推荐系统</span>
         </h3>
         <span flex></span>
-        <div ng-if="!globals.currentUser">
+        <div ng-if="!newsApp.currentUser">
           <!-- 如果为登录显示这个div -->
           <md-button class="md-fab md-mini"
           aria-label="Favorite"
@@ -15,8 +15,8 @@
             <md-icon md-svg-icon="images/login32.svg"></md-icon>
           </md-button>
         </div>
-        <div layout="row" ng-if="globals.currentUser">
-          <span><p>hi {{user.name}}</p></span>
+        <div layout="row" ng-if="newsApp.currentUser">
+          <span><p>hi {{newsApp.currentUser.username}}</p></span>
           <md-menu-bar>          
             <md-menu>
               <md-button  class="md-fab md-mini md-primary" ng-mouseenter=" $mdMenu.open()">
@@ -24,7 +24,7 @@
               </md-button>
               <md-menu-content width="1.5" ng-mouseleave="$mdMenu.close()">
                 <md-menu-item>
-                  <md-button ng-click="test('login')">
+                  <md-button ng-click="vm.logout('login')">
                     退出
                   </md-button>
                 </md-menu-item>

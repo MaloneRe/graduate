@@ -37,7 +37,7 @@ public class CrawlTask {
 	}
 	
 	public static void  runSpider() {
-		Assert.assertNotNull(crawlManager);
+		//Assert.assertNotNull(crawlManager);
 		log.info("crawlmanage is null :{}",crawlManager == null);
 		crawlManager.callbackDataCrawl(count, urls);
 	}

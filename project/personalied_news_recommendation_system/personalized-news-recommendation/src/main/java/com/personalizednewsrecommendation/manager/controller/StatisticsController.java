@@ -12,17 +12,21 @@ import io.swagger.annotations.ApiOperation;
 
 import com.personalizednewsrecommendation.manager.controller.statistics.*;
 import org.springframework.web.bind.annotation.*;
-
+import io.swagger.annotations.*;
 @Controller
 @Api(value = "/statistics", tags = "统计文档", hidden = false, consumes = "application/json", produces = "application/json,application/xml", description = "项目StatisticsController接口")
 public class StatisticsController {
 	
-	@RequestMapping(value = "/{count}/statistics", method = RequestMethod.GET)
+	
+	
+	
 	@ApiOperation(value = "推荐算法的相关比较", notes = "返回json数据"
-	, httpMethod = "GET"
-	, produces = "application/json, application/xml"
-	, consumes = "application/json, application/xml"
-	, response = org.springframework.web.servlet.ModelAndView.class)
+			, httpMethod = "GET"
+			, produces = "application/json, application/xml"
+			, consumes = "application/json, application/xml"
+			, response = org.springframework.web.servlet.ModelAndView.class)
+	@ApiParam(name = "count", value = "要求推荐新闻数", required = true)
+	@RequestMapping(value = "/{count}/statistics", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> statistcs(@PathVariable("count") Integer at){
 		

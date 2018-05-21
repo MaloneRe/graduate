@@ -52,7 +52,7 @@ public class BaseController {
 	private static Logger log=LoggerFactory.getLogger(BaseController.class);
 
 	
-	@Resource(name="userSerivce")
+	@Resource(name="userService")
 	private UserService userService;
 	
 	@Autowired
@@ -67,28 +67,28 @@ public class BaseController {
 	 * @param user
 	 * @throws
 	 */
+	@ApiOperation(value = "登录", notes = "返回json数据"
+		/*, tags = "登录"*/
+		, httpMethod = "GET"
+		, produces = "application/json, application/xml"
+		, consumes = "application/json, application/xml"
+		, response = Map.class)
+	@ApiResponse(code = 200, message = "success true")
+	/*@ApiImplicitParams({
+		@ApiImplicitParam(name = "name", value = "姓名", required = true, paramType = "form", dataType = "String"),
+		@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
+		})*/
+	 @ApiParam(name = "username", value = "用户名和密码",required = true, 
+	 example = "/api/users/test") 
+	 /* Map<String, String> user
+	 */
 	@RequestMapping(value = "/api/users/{username}", method = RequestMethod.GET)
 	/*
 	 * ,consumes={"application/json, text/html"} ,produces={
 	 * "application/json; charset=UTF-8"})
 	 * //,params={"username=name","password=pwd"}
 	 */
-	@ApiOperation(value = "登录", notes = "返回json数据"
-		, httpMethod = "GET"
-		, produces = "application/json, application/xml"
-		, consumes = "application/json, application/xml"
-		, response = org.springframework.web.servlet.ModelAndView.class)
 	@ResponseBody
-	@ApiResponse(code = 400, message = "Invalid Order")
-	/*@ApiImplicitParams({
-		@ApiImplicitParam(name = "name", value = "姓名", required = true, paramType = "form", dataType = "String"),
-		@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
-		})*/
-	/** @ApiParam(name = "user", value = "用户名和密码", 
-	 * example = "{'name':'zhangsan','password':'123456'}") 
-	 * Map<String, String> user
-	 */
-	
 	public Map<String, Object>  login(
 			@PathVariable("username") String name, HttpSession session) {
 		System.out.println(name);
@@ -105,6 +105,9 @@ public class BaseController {
 			 * 记录当前登录用户
 			 */
 			session.setAttribute("currentUser", user);
+			log.info("session is {}"
+					, session.getAttribute("currentUser").toString());
+			
 		}else {
 			message.put("success", false);
 		}
@@ -125,15 +128,19 @@ public class BaseController {
 		return  message;
 	}
 
-	@RequestMapping(value = "/api/users", method = RequestMethod.POST)
-	@ApiOperation(value = "注册", notes = "返回json数据", httpMethod = "POST", produces = "application/json", consumes = "application/json", response = org.springframework.web.servlet.ModelAndView.class)
-
+	@ApiOperation(value = "注册"
+			, notes = "用户注册，返回json数据"
+			, httpMethod = "POST"
+			, produces = "application/json"
+			, consumes = "application/json"
+			, response = Map.class)
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "name", value = "姓名", required = true, paramType = "form", dataType = "String"),
-			@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
-			})
+		@ApiImplicitParam(name = "name", value = "姓名", required = true, paramType = "form", dataType = "String"),
+		@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
+	})
+	@ApiResponses({ @ApiResponse(code = 200, message = "success true") })
+	@RequestMapping(value = "/api/users", method = RequestMethod.POST)
 	@ResponseBody
-	@ApiResponses({ @ApiResponse(code = 400, message = "Invalid Order") })
 	public Map<String, Object> register(
 			@RequestBody @ApiParam(name = "user", value = "用户名,密码"
 			, example = "{'name':'zhangsan','password':'123456'}") 
@@ -158,29 +165,38 @@ public class BaseController {
 	 * @Method: logout 
 	 * @throws
 	 */
+	@ApiOperation(value = "退出", notes = "用户退出系统"
+			, httpMethod = "DELETE", produces = "application/json"
+			, consumes = "application/json"
+			, response = Map.class)
+	@ApiParam(name = "session", value = "回话" )
 	@RequestMapping(value = "/api/users", method = RequestMethod.DELETE)
-	@ApiOperation(value = "退出", notes = "返回void"
-		, httpMethod = "DELETE", produces = "application/json"
-		, consumes = "application/json"
-		, response = org.springframework.web.servlet.ModelAndView.class)
-	public void logout(HttpSession session){
-		
+	@ResponseBody
+	public Map<String, Object> logout(HttpSession session){
+		Map<String, Object> message = new HashMap();
 		User user = (User) session.getAttribute("currentUser");
-		log.info("session is :{}",user.toString());
-		session.setAttribute("oldUser", user);
-		session.removeAttribute("curentUser");
-		/**
-		 * 记录旧的登录用户
-		 */
-		Cache cache = caheManager.getCache("user");
-		try {
-			//cache.acquireWriteLockOnKey("oldUser");
-			///Element element = new Element("oldUser", user);
-			//cache.put(element);
-			cache.put("oldUser", user);
-		} finally {
-			//cache.releaseWriteLockOnKey("oldUser");
+		if (user != null) {
+			log.info("session is :{}",user.toString());
+			session.setAttribute("oldUser", user);
+			session.removeAttribute("curentUser");
+			/**
+			 * 记录旧的登录用户
+			 */
+			Cache cache = caheManager.getCache("user");
+			try {
+				//cache.acquireWriteLockOnKey("oldUser");
+				///Element element = new Element("oldUser", user);
+				//cache.put(element);
+				cache.put("oldUser", user);
+			} finally {
+				//cache.releaseWriteLockOnKey("oldUser");
+			}
+			message.put("success", true);
+			message.put("user", user);
+		}else {
+			message.put("success", false);
 		}
+		return message;
 	}
 	
 	
@@ -193,11 +209,15 @@ public class BaseController {
 	@Resource(name = "behaviorLogService")
 	private BehaviorLogService behaviorLogService;
 	
+	@ApiOperation(value = "推荐", notes = "得到推荐结果，返回是json数据"
+			, httpMethod = "GET", produces = "application/json"
+			, consumes = "application/json"
+			, response = JSONArray.class)
+	@ApiParam(name = "session"
+	, value = "用户回话，session里有user"
+	, readOnly = true
+	, required = true)
 	@RequestMapping(value = "/api/recommender", method = RequestMethod.GET)
-	@ApiOperation(value = "得到推荐结果", notes = "返回json数据"
-		, httpMethod = "GET", produces = "application/json"
-		, consumes = "application/json"
-		, response = org.springframework.web.servlet.ModelAndView.class)
 	@ResponseBody
 	public List<JSONObject> recommender(HttpSession session){
 		User user = (User) session.getAttribute("currentUser");
@@ -232,11 +252,12 @@ public class BaseController {
 		return newses;
 	}
 	
+	@ApiOperation(value = "获得新闻", notes = "获得不同类别的新闻，返回json数据"
+			, httpMethod = "GET", produces = "application/json"
+			, consumes = "application/json"
+			, response = org.springframework.web.servlet.ModelAndView.class)
+	@ApiParam(name = "categoty", value = "类别名", readOnly = true, required = true)
 	@RequestMapping(value = "/api/news/{category}", method = RequestMethod.GET)
-	@ApiOperation(value = "获得不同类别的新闻", notes = "返回json数据"
-	, httpMethod = "GET", produces = "application/json"
-	, consumes = "application/json"
-	, response = org.springframework.web.servlet.ModelAndView.class)
 	@ResponseBody
 	public List<News> getNewsByCategory( @PathVariable("category") String category ){
 		/*Long cate ;
@@ -262,11 +283,12 @@ public class BaseController {
 	@Resource(name = "topNewsService")
 	private TopNewsService topNewsService;
 	
+	@ApiOperation(value = "今日新闻", notes = "获得今日热点的新闻，返回json数据"
+			, httpMethod = "GET", produces = "application/json"
+			, consumes = "application/json"
+			, response = org.springframework.web.servlet.ModelAndView.class)
 	@RequestMapping(value = "/api/todaynews", method = RequestMethod.GET)
-	@ApiOperation(value = "获得今日热点新闻", notes = "返回json数据"
-	, httpMethod = "GET", produces = "application/json"
-	, consumes = "application/json"
-	, response = org.springframework.web.servlet.ModelAndView.class)
+	@ResponseBody
 	public JSONObject getHotNews(){
 		JSONObject jsonObject = new  JSONObject();
 		List<News> list = topNewsService.getTodayNews();
@@ -293,11 +315,12 @@ public class BaseController {
     	return jsonObject;
 	}
 
+	@ApiOperation(value = "新闻内容", notes = "获得新闻文章，返回json数据"
+			, httpMethod = "GET", produces = "application/json"
+			, consumes = "application/json"
+			, response = org.springframework.web.servlet.ModelAndView.class)
+	@ApiParam(name = "id", value = "新闻id", required = true)
 	@RequestMapping(value = "/api/news/{id}/content", method = RequestMethod.GET)
-	@ApiOperation(value = "获得新闻内容", notes = "返回json数据"
-	, httpMethod = "GET", produces = "application/json"
-	, consumes = "application/json"
-	, response = org.springframework.web.servlet.ModelAndView.class)
 	@ResponseBody
 	public JSONObject getNewsDetail(@PathVariable("id") Long id){
 		JSONObject jsonObject = new JSONObject();
@@ -324,11 +347,12 @@ public class BaseController {
 	@Resource(name = "commentService")
 	private CommentService commentService;
 	
+	@ApiOperation(value = "评论列表", notes = "获得对某一新闻的评论列表，返回json数据"
+			, httpMethod = "GET", produces = "application/json"
+			, consumes = "application/json"
+			, response = org.springframework.web.servlet.ModelAndView.class)
+	@ApiParam(name = "id" , value = "新闻id", required = true)
 	@RequestMapping(value = "/api/{id}/comment", method = RequestMethod.GET)
-	@ApiOperation(value = "获得新闻的评论列表", notes = "返回json数据"
-	, httpMethod = "GET", produces = "application/json"
-	, consumes = "application/json"
-	, response = org.springframework.web.servlet.ModelAndView.class)
 	@ResponseBody
 	public JSONArray getCommnentById(@PathVariable("id") Long id){
 		List<Comment> list= commentService.getByNewsId(id);
@@ -343,11 +367,17 @@ public class BaseController {
 		return jsonArray;
 	}
 	
+	@ApiOperation(value = "评论", notes = "创建用户评论对某一新闻的评论,返回json数据"
+			, httpMethod = "POST", produces = "application/json"
+			, consumes = "application/json"
+			, response = org.springframework.web.servlet.ModelAndView.class)
+	@ApiParam(name = "id", value = "新闻id", required = true)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "uid", value = "用户id", dataType = "Long")
+		, @ApiImplicitParam(name = "nid", value = "新闻id", dataType = "Long" )
+		, @ApiImplicitParam(name = "content", value = "新闻评论内容", dataType = "String")
+	})
 	@RequestMapping(value = "/api/{id}/comment", method = RequestMethod.POST)
-	@ApiOperation(value = "创建用户评论对某一新闻的评论", notes = "返回json数据"
-	, httpMethod = "POST", produces = "application/json"
-	, consumes = "application/json"
-	, response = org.springframework.web.servlet.ModelAndView.class)
 	@ResponseBody
 	public JSONObject createComment(@PathVariable("id") Long id
 			, @RequestBody Map<String, Object> comment){
@@ -377,11 +407,12 @@ public class BaseController {
 	/**
 	 * 一些行为假设
 	 */
-	@RequestMapping(value = "/api/{id}", method = RequestMethod.POST)
 	@ApiOperation(value = "收藏或者分享新闻", notes = "返回json数据"
-	, httpMethod = "POST", produces = "application/json"
-	, consumes = "application/json"
-	, response = org.springframework.web.servlet.ModelAndView.class)
+			, httpMethod = "POST", produces = "application/json"
+			, consumes = "application/json"
+			, response = org.springframework.web.servlet.ModelAndView.class)
+	@ApiParam(name = "id", value = "新闻id", required= true)
+	@RequestMapping(value = "/api/{id}", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> behavior(@PathVariable("id") Long nid
 	, @RequestBody Map<String, Object> paramer){

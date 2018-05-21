@@ -10,10 +10,12 @@
         var service = {};
 
         service.Login = Login;
-         service.Register = Register;
+        service.Register = Register;
+        service.Logout = Logout;
         service.SetCredentials = SetCredentials;
         service.ClearCredentials = ClearCredentials;
-
+        service.Base64 = Base64;
+        
         //var appName="personalized news recommendation system";
         return service;
 
@@ -25,6 +27,7 @@
             UserService.GetByUsername(username)
                 .then(function (data) {
                     if (data !== null && data.user.password === password) {
+                    	console.log(data);
                         response = { success: true , user:data.user};
                     } else {
                         response = { success: false
@@ -55,6 +58,7 @@
                 .then(function (data) {
                     if (data !== null && data.success === true) {
                         response = { success: true };
+
                     } else {
                         response = { success: false, message: 'Username "' + user.username + '" is already taken' };
                     }
@@ -68,7 +72,28 @@
                 });
         };
 
+        function Logout(callback){
+            let response;
+            UserService.Exit()
+                .then(function(data){
+                    if (data !== null && data.success === true) {
+                        response = { success: true };
+                       
+                    } else {
+                        response = { success: false
+                            , message: 'is errors' };
+                    }
+                    callback(response);
+                },function(data){
+                     response = { success: false
+                        , message: 'errors' };
+                    callback(response);
+                });
+        }
+
         function SetCredentials(user){
+            console.log(this);
+            console.log(service.Base64);
             var authdata = Base64.encode(user.name + ':' + user.password);
 
             $rootScope.newsApp = {
@@ -93,8 +118,9 @@
             $cookies.remove('newsApp');
             $http.defaults.headers.common.Authorization = 'Basic';
         };
+    }
 
-        // Base64 encoding service used by AuthenticationService
+     // Base64 encoding service used by AuthenticationService
         var Base64 = {
 
             keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -176,5 +202,4 @@
             }
         };
 
-    }
 })();

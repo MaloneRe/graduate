@@ -15,9 +15,11 @@
 	<mvc:annotation-driven />
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
 	<context:component-scan
-		base-package="com.personalizednewsrecommendation.manager.controller" />
+		base-package="springfox, com.personalizednewsrecommendation.manager.controller" />
 	<!-- 静态资源处理 css js imgs -->
 	<!-- <mvc:resources location="/resources/**" mapping="/resources"/> -->
+	<mvc:resources location="/FrontEndWebDeveloper/"
+		mapping="/index.html" />
 	<mvc:resources location="/FrontEndWebDeveloper/lib/"
 		mapping="/lib/**" />
 	<mvc:resources location="/FrontEndWebDeveloper/images/"
@@ -26,6 +28,8 @@
 		mapping="/js/**" />
 	<mvc:resources location="/FrontEndWebDeveloper/css/"
 		mapping="/css/**" />
+	<!-- <mvc:resources location="/FrontEndWebDeveloper/module/*/**"
+		mapping="/module/**" /> -->
 	<mvc:resources location="/FrontEndWebDeveloper/module/login/app-services/"
 		mapping="/module/login/app-services/**" />
 	<mvc:resources location="/FrontEndWebDeveloper/module/login/app-content/"
@@ -36,8 +40,14 @@
 		mapping="/module/login/login/**" />
 	<mvc:resources location="/FrontEndWebDeveloper/module/login/register/"
 		mapping="/module/login/register/**" />
-
-
+	<mvc:resources location="/FrontEndWebDeveloper/module/home/"
+		mapping="/module/home/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/module/detail/"
+		mapping="/module/detail/**" />
+	<mvc:resources location="/FrontEndWebDeveloper/view/"
+		mapping="/view/**" />
+	
+	<mvc:default-servlet-handler />
 	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -45,7 +55,6 @@
 		<property name="prefix" value="/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-	<mvc:default-servlet-handler />
 
 	<!-- 我的拦截器 ,拦截一些请求记录好记录日志 -->
 	<mvc:interceptors>
@@ -69,5 +78,5 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 
-
+	
 </beans>

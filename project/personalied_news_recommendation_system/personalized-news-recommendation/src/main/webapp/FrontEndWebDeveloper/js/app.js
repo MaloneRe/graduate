@@ -45,12 +45,12 @@
     }]);
 	app.run(['$rootScope', '$location', '$cookies', '$http',function($rootScope, $location, $cookies, $http){
 		// keep user logged in after page refresh
-        $rootScope.globals = $cookies.getObject('newsApp') || {};
+        $rootScope.newsApp = $cookies.getObject('newsApp') || {};
         
-        console.log($rootScope.globals);
+        console.log($rootScope.newsApp);
         
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata;
+        if ($rootScope.newsApp.currentUser) {
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.newsApp.currentUser.authdata;
         }
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
@@ -58,7 +58,7 @@
             var restrictedPage = $.inArray($location.path(), ['/login'
                 , '/register'
                 , '/detail']) === -1;
-            var loggedIn = $rootScope.globals.currentUser;
+            var loggedIn = $rootScope.newsApp.currentUser;
             if (restrictedPage && !loggedIn) {
                 $location.path('/');
             }

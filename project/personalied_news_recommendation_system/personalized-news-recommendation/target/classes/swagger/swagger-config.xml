@@ -16,6 +16,7 @@
                         
     
     
+	<mvc:annotation-driven enable-matrix-variables="true"/>
     <!-- swwager配置 -->
     <!--将静态资源交由默认的servlet处理-->
     <!-- <mvc:default-servlet-handler /> -->
@@ -23,10 +24,11 @@
 	<context:annotation-config />
 	<!--重要！将你的SwaggerConfig配置类注入 -->
 	<bean class="com.personalizednewsrecommendation.swagger.config.SwaggerConfig" />
+	<!-- <mvc:default-servlet-handler/> -->
 	<!--重要！配置swagger资源不被拦截 -->
 	<!-- 下面的是默认配置不用其他操作的 -->
-	<mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
-	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
+	<mvc:resources mapping="/swagger-ui.html" location="classpath:/META-INF/resources/" />
+	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/springfox-swagger-ui/**" />
 	<!-- 这里是要创建swagger目录并且把swagger-ui中dist内容拷贝到swagger目录中 -->
 	<!-- 修改index.html中的 http://petstore.swagger.wordnik.com/v2/swagger.json修改为自己项目路径+api-docs,例如：
           http://localhost:8080/SSMSwagger/api-docs：SSMSwagger为项目名称。

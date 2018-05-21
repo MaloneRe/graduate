@@ -16,6 +16,7 @@
         service.Update = Update;
         service.Delete = Delete;
 
+        service.Exit = Exit;
         return service;
 
        
@@ -34,6 +35,16 @@
         function Create(user) {
             var deferred = $q.defer();     
             $http.post('/api/users', user).then(function(response){
+                deferred.resolve(response.data);
+            }, function(response){
+                deferred.reject(response);
+            });
+            return deferred.promise;
+        }
+
+        function Exit(){
+            let deferred = $q.defer(); 
+            $http.delete('/api/users',{}).then(function(response){
                 deferred.resolve(response.data);
             }, function(response){
                 deferred.reject(response);

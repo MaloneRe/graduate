@@ -237,6 +237,31 @@ public class NewsControllerTest {
 		}
 	}
 	
+	
+	@Test
+	public void testSwagger(){
+		
+		MvcResult mvcResult;
+		try {
+			mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/swagger-ui.html")
+				 	 .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))  
+			        .contentType(MediaType.APPLICATION_JSON)
+			     
+			       )
+			     .andExpect(MockMvcResultMatchers.status().is(200))
+			     .andDo(MockMvcResultHandlers.print())
+			     .andReturn();
+			int status = mvcResult.getResponse().getStatus();
+			log.info("请求状态码：{}", status);
+			String result = mvcResult.getResponse().getContentAsString();
+			log.info("接口返回结果：{}", result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	@After
 	public void afterTest(){
 		

@@ -3,6 +3,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -15,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2//重要！
 @EnableWebMvc
 @ComponentScan(basePackages = "com.personalizednewsrecommendation.manager.controller")//扫描control所在的package请修改为你control所在package
-public class SwaggerConfig {
+public class SwaggerConfig extends WebMvcConfigurerAdapter{
 	
     @Bean
     public Docket api() {
@@ -35,4 +38,15 @@ public class SwaggerConfig {
                 .licenseUrl("/personalized-news-recommendation/error.html")
                 .build();
     }
+    /**
+     * 这个与<mvc:resource map = "" location = "">
+     * 等同
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {  
+        registry.addResourceHandler("swagger-ui.html")  
+                .addResourceLocations("classpath:/META-INF/resources/");  
+        registry.addResourceHandler("webjars/**")  
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");  
+    }  
 }

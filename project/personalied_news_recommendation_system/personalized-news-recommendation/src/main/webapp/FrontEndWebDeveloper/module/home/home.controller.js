@@ -6,18 +6,23 @@
         , '$scope'
         , '$location'
         , '$cookies'
+        , 'NewsFactory'
         , 'UserService'
+        , 'AuthenticationService'
     	,function($rootScope
             , $scope
             , $location
             , $cookies
-            , UserService){
+            , NewsFactory
+            , UserService
+            , AuthenticationService){
     		var vm=this;
             //return vm;
-            vm.login=login;
-            vm.goto=goto;
-            vm.test=test;
-            $scope.login=login;
+            vm.login = login;
+            vm.logout = logout;
+            vm.goto = goto;
+            vm.test = test;
+            $scope.login = login;
             $scope.goto=goto;
             $scope.test=test;
     		$scope.user={'name':'zhanghui'};
@@ -104,15 +109,27 @@
                         //console.log("recommend");
                         break;
                     default:  
-                        news = recommend;
+                        news = other;
                         //console.log("recommend");
                         break;
                 }
                 $scope.news = news;
       			console.log("Goto " + page);
-    		}
+    		};
             function login(url){
                  $location.path(url);
-            }
+            };
+
+            function logout(commend){
+               AuthenticationService.Logout(function(response){
+                    if (response.success) {
+                       AuthenticationService.ClearCredentials();
+                        $location.path('/');
+                    } else {
+                       console.log(response);
+                        AuthenticationService.ClearCredentials();
+                    }
+               });
+            };
     	}]);
 })();
