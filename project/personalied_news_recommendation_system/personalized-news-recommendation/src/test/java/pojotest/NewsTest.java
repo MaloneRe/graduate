@@ -26,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.personalizednewsrecommendation.manager.dao.NewsDAO;
 import com.personalizednewsrecommendation.manager.pojo.Category;
 import com.personalizednewsrecommendation.manager.pojo.News;
+import com.alibaba.fastjson.JSONObject;
 import com.personalizednewsrecommendation.manager.dao.*;
 import com.personalizednewsrecommendation.manager.pojo.*;
 
@@ -49,27 +50,28 @@ public class NewsTest {
 		news = new News();
 		News news1 = new News();
 		List<News> list=new ArrayList<>();
-		category = new Category();
+		/*category = new Category();
 		category.setId((long) 2);
 		news.setTitle("1test333news22");
 		news.setUrl("http://123");
 		news.setImageUrl("http://png");
 		news.setCategoryId((long)2);
-		/*news.setMedia("self");
-		news.setContent("test");*/
+		news.setMedia("self");
+		news.setContent("test");
 		news1.setTitle("2test45454news2888888888882");
 		news1.setUrl("http://3ee123");
 		news1.setImageUrl("http://---png");
 		news1.setCategoryId((long)3);
 		list.add(news1);
 		list.add(news);
-		newsDAO.insertNewses(list);
+		newsDAO.insertNewses(list);*/
 
 	}
 	
 	@Test
 	public void testInsert(){
 		//newsDAO.insertNews(List<E>);
+		log.info("newslist:{}\n",JSONObject.toJSONString(newsDAO.getAll()));
 		System.out.println("testinsetr");
 	}
 	@Test
@@ -82,5 +84,10 @@ public class NewsTest {
 	@After
 	public void verifyResult(){
 		newsDAO.updateNews(news);
+	}
+	
+	@Test
+	public void getALl(){
+		
 	}
 }

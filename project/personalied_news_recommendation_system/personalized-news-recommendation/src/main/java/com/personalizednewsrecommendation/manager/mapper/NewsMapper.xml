@@ -27,7 +27,10 @@
     <select id="getNewsById" parameterType="Long" resultMap="NewsMap">
         select * 
         from news
-        where id = #{id}
+        where id = #{id} 
+        <!--  and DATE_SUB(curdate(), INTERVAL 1 DAY) <= DATE(gmt_modified) -->
+        <!-- <![CDATA[and DATE_SUB(curdate(), INTERVAL 1 DAY) <= DATE(gmt_modified)]]> -->
+    	<!-- <![CDATA[and DATE_FORMAT(gmt_modified, '%Y-%m-%d')>=  DATE_FORMAT(now(), '%Y-%m-%d')]]> -->
     </select>
     <resultMap type="News" id="NewsMap">
         <id property="id" column="id"/>
@@ -48,7 +51,7 @@
     <select id="getNewsesById" parameterType="Long" resultMap="NewsesMap">
         select * 
         from news
-        where catalog_id = #{categoryId}  
+        where catalog_id = #{categoryId}
     </select>
      <select id="getByUrlAndTitle"  resultMap="NewsMap">
         select * 
@@ -69,6 +72,7 @@
    <select id="getAll" parameterType="String" resultMap="NewsesMap">
         select * 
         from news 
+        <!-- <![CDATA[and DATE_SUB(curdate(), INTERVAL 1 DAY) <= DATE(gmt_modified)]]>  -->
     </select>
     
     <update id="updateNews" parameterType="News">

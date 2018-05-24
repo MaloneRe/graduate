@@ -43,7 +43,7 @@ public class CrawlQueueReceiver implements MessageListener {
 						/**
 						 * 插入数据库
 						 */
-						//this.insertNewsDB(url, newses);
+						this.insertNewsDB(url, newses);
 					}
 				}
 			} catch (JMSException e) {

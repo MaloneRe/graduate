@@ -7,7 +7,7 @@
     NewsFactory.$inject = ['$rootScope', 'NewsSvervice'];
     function NewsFactory($rootScope, newsSvervice){
     	var factory = {};
-    	factory.NewList = NewList;
+    	factory.NewsList = NewsList;
     	factory.NewsDetail = NewsDetail;
     	factory.TodayNews = TodayNews;
 
@@ -20,13 +20,17 @@
 
     	return factory;
 
-    	function NewList(category, callback){
+    	function NewsList(category, callback){
     		let response;
     		newsSvervice.getNews(category)
     		.then(function(data){
     			if (data !== null ) {
                    	console.log(data);
-                    response = { success: true };
+                   	
+                    response = { 
+                    	success: true,
+                    	data:data
+                    };
                 } else {
                     response = { success: false
                        	, message: 'error'
@@ -47,12 +51,23 @@
     		.then(function(data){
     			if (data != null) {
     				console.log(data);
+    				response = {
+    					success:true,
+    					content:data.content
+    				};
     			}else{
-
+    				response = {
+    					success:false,
+    					content:"出错了"
+    				};
     			}
     			callback(response);
     		}, function(data){
     			console.log(data);
+    			response = {
+    					success:false,
+    					content:"出错了"
+    				};
     			callback(response);
     		});
     	};
@@ -61,10 +76,17 @@
     		let response;
     		newsSvervice.getTopNews()
     		.then(function(data){
-    			if (data != null) {
+    			if (data != null && data.success) {
     				console.log(data);
+    				response = {
+    					success:true,
+    					content:data.content
+    				};
     			}else{
-
+    				response = {
+    					success:false,
+    					message:'error'
+    				};
     			}
     			callback(response);
     		}, function(data){
@@ -111,11 +133,34 @@
     		.then(function(data){
     			if (data != null) {
     				console.log(data);
+    				let array =[];
+    				for (var i = 0; i < data.length; i++) {
+    					let comment ={
+    						commentID:data[i].id,
+    						userName: data[i].username,
+    						userID:data[i].uid,
+    						newsID:data[i].nid,
+    						content:data[i].content,
+    						time:data[i].time
+    					};
+    					array.push(comment);
+    				};
+    				response = {
+    					success:true,
+    					content:array
+    				};
     			}else{
-
+    				response ={
+    					success:false,
+    					message:"error"
+    				};
     			}
     			callback(response);
     		}, function(data){
+    			    response ={
+    					success:false,
+    					message:data
+    				};
     			console.log(data);
     			callback(response);
     		});
@@ -128,12 +173,14 @@
     		.then(function(data){
     			if (data != null) {
     				console.log(data);
+    				response = data;
     			}else{
 
     			}
     			callback(response);
     		}, function(data){
     			console.log(data);
+    			response = data;
     			callback(response);
     		});
     	};

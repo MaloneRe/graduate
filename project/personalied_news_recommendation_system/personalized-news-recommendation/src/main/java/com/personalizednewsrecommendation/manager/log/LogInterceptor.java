@@ -28,12 +28,15 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 
 	@Resource(name = "behaviorLogService")
 	private BehaviorLogService behaviorLogService;
-
+	
+	private HttpSession session;
+	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		// TODO Auto-generated method stub
 		log.info("prehandle============>");
+		session = request.getSession();
 		return super.preHandle(request, response, handler);
 	}
 
@@ -45,7 +48,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 		// StringBuffer stringBuffer = new StringBuffer("/api/");
 		String url = request.getRequestURI().toString();
 		String methodType = request.getMethod().toString();
-		HttpSession session = request.getSession();
+		
 		User user = (User) session.getAttribute("currentUser");
 		Long uid = null;
 		if (user != null) {

@@ -19,7 +19,54 @@
       			<div flex></div>
     		</div>
     	</md-toolbar>
+      <md-content layout="row" layout-sm="column"
+        layout-align="none center" layout-wrap>
+         <md-button class="md-fab md-mini"
+            aria-label="share"
+            ng-click="vm.behavior($event, 'share')">
+            <md-icon md-svg-src="images/share.svg"></md-icon>
+            <md-tooltip md-direction="bottom" >
+                  分享
+            </md-tooltip>
+        </md-button>
 
+        <md-button class="md-fab md-mini md-primary"
+          aria-label="collection"
+          ng-click="vm.behavior($event, 'collection')">
+          <md-icon md-svg-src="images/collect.svg" style="color: greenyellow;">
+          </md-icon>
+          <md-tooltip md-direction="bottom" >
+              收藏
+          </md-tooltip>
+        </md-button>
+      </md-content>
+      <md-divider/>
+      <md-content id="news_body" layout-wrap>
+
+      </md-content>
+
+      <md-divider/>
+      <md-content layout="row" layout-sm="column"
+        layout-align="none center" layout-wrap>
+         <md-button class="md-fab md-mini"
+            aria-label="share"
+            ng-click="vm.behavior($event, 'share')">
+            <md-icon md-svg-src="images/share.svg"></md-icon>
+            <md-tooltip md-direction="bottom" >
+                  分享
+            </md-tooltip>
+        </md-button>
+
+        <md-button class="md-fab md-mini md-primary"
+           aria-label="collection" 
+           ng-click="vm.behavior($event, 'collection')">
+          <md-icon md-svg-src="images/collect.svg" style="color: greenyellow;">
+          </md-icon>
+          <md-tooltip md-direction="bottom" >
+              收藏
+          </md-tooltip>
+        </md-button>
+      </md-content>
     	<md-divider/>
     	<md-conten layout="column" layout-align="center none" flex>
     		 <md-input-container class="md-block">
@@ -31,10 +78,10 @@
           		<textarea ng-model="vm.comment.content" md-maxlength="150" rows="2" md-select-on-focus></textarea>
           		<!-- {{vm.comment.content}} -->
           		<md-button class="md-raised"
-          		 aria-label="submit">
+          		 aria-label="submit" ng-click="vm.submit($event, vm.comment.content)">
           			<md-icon md-svg-icon="images/commit32.svg"
           			 style="color: greenyellow;"></md-icon>
-          			<md-tooltip md-direction="bottom">
+          			<md-tooltip md-direction="bottom" >
           				 提交
           			</md-tooltip>
         		</md-button>
@@ -54,21 +101,41 @@
         		<!-- 
         			<img ng-src="images/avatar32.svg" class="md-avatar"/>
         		-->
-        		<md-list-item class="md-2-line" ng-repeat="item in vm.comment" ng-click="vm.test(item)">
+            {{comments}}
+        		<md-list-item class="md-2-line" ng-repeat="item in vm.comments" ng-click="vm.test($event, item)">
           			<!-- <img ng-src="images/avatar32.svg" class="md-avatar" alt="{{item.content}}" /> -->
           			<div class="md-list-item-text"
           			 layout="row" 
           			 layout-align="center none"
-          			 data-id="{{item.id}}">
-          			<img ng-src="images/avatar32.svg" class="md-avatar" alt="{{item.content}}" />
-            		<!-- <h3>{{ item.who }}</h3> -->
-            		<h4 flex layout="column" layout-align="center none">
-            			<span>
-            				{{ item.content }}
-            			</span>
+          			 data-id="{{item.commentID}}">
+          			   <img ng-src="images/avatar32.svg" class="md-avatar" alt=" {{item.userName}}" 
+                    data-userid = "{{item.userID">
+                   <md-tooltip md-direction="top" >
+                      {{item.userName}}
+                    </md-tooltip>
+                  </img>
+                  <!-- <md-button class="md-fab" class="md-avatar"
+                     ng-disabled="true"
+                     aria-label="{{item.userName}}"
+                     data-userid="{{item.userID}}">
+                    <md-icon md-svg-src="images/avatar32.svg">
+                      
+                    </md-icon>
+                    <md-tooltip md-direction="bottom" >
+                      {{item.userName}}
+                    </md-tooltip>
+                  </md-button> -->
+
+            		  <!-- <h3>{{ item.who }}</h3> -->
+            		  <h4 flex layout="column" layout-align="center none">
+            			   <span>
+            				  {{ item.content }}
+            			   </span>
             		 
-            		</h4>
-            		<p layout="column" layout-align="center none">{{ item.time }}</p>
+            		  </h4>
+            		  <p layout="column" layout-align="center none">
+                    {{ item.time }}
+                  </p>
           			</div>
           		<md-divider ></md-divider>
         		</md-list-item>

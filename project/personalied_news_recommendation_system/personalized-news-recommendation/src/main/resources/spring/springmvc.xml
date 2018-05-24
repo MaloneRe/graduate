@@ -28,7 +28,7 @@
 		mapping="/js/**" />
 	<mvc:resources location="/FrontEndWebDeveloper/css/"
 		mapping="/css/**" />
-	<!-- <mvc:resources location="/FrontEndWebDeveloper/module/*/**"
+	<!-- <mvc:resources location="/FrontEndWebDeveloper/module/*/"
 		mapping="/module/**" /> -->
 	<mvc:resources location="/FrontEndWebDeveloper/module/login/app-services/"
 		mapping="/module/login/app-services/**" />
@@ -46,7 +46,8 @@
 		mapping="/module/detail/**" />
 	<mvc:resources location="/FrontEndWebDeveloper/view/"
 		mapping="/view/**" />
-	
+	<mvc:resources location="/FrontEndWebDeveloper/module/interceptor/"
+		mapping="/module/interceptor/**" />
 	<mvc:default-servlet-handler />
 	<!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
 	<bean

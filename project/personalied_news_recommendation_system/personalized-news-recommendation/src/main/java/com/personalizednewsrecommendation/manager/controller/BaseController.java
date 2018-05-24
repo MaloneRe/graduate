@@ -221,9 +221,16 @@ public class BaseController {
 	@ResponseBody
 	public List<JSONObject> recommender(HttpSession session){
 		User user = (User) session.getAttribute("currentUser");
-		Long uid = user.getId();
-		if (uid == null) {
-			uid = ((User) session.getAttribute("oldUser")).getId();
+		Long uid ;
+		if (user == null) {
+			user = ((User) session.getAttribute("oldUser"));
+			if (user == null) {
+				uid = (long)1;
+			}else{
+				uid = user.getId();
+			}
+		}else {
+			uid = user.getId();
 		}
 		List<RecommendedItem> list = null;
 		

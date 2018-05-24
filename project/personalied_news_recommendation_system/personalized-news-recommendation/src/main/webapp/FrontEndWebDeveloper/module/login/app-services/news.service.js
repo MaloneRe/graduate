@@ -3,7 +3,7 @@
 	angular.module('MyService')
 	.service('NewsSvervice',NewsService);
 	NewsService.$inject=['$http','$filter', '$q'];
-	function NewsService(){
+	function NewsService($http, $filter, $q){
 		var vm={};
 		vm.getNews=getNews;
 		vm.getNewsDetailById=getNewsDetailById;
