@@ -47,7 +47,7 @@
 	<aspectj.version>1.8.8</aspectj.version>
 	
 	<!-- jsoup HTML parser library @ http://jsoup.org/ -->
-	<jsoup.version>1.11.2</jsoup.version>
+	<jsoup.version>1.15.3</jsoup.version>
 	<!-- WebMagic爬虫框架-->
 	<webmagic.version>0.7.3</webmagic.version>
 	<!-- Quartz任务调度框架 -->
