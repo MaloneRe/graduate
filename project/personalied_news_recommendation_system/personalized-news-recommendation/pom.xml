@@ -42,7 +42,7 @@
 	<!-- swagger -->
 	<swagger.version>3</swagger.version>
 	<!-- springfox （用于整合swagger） -->
-	<springfox.version>2.9.0</springfox.version>
+	<springfox.version>2.13.4.1</springfox.version>
 	<!-- aspectj -->
 	<aspectj.version>1.8.8</aspectj.version>
 	
