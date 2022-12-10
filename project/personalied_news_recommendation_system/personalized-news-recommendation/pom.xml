@@ -24,7 +24,7 @@
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- 定义相关依赖版本号 -->
 	<!-- spring版本号 -->
-	<spring.version>4.3.9.RELEASE</spring.version>
+	<spring.version>6.0.0</spring.version>
 	<!-- mybatis版本号 -->
 	<mybatis.version>3.4.1</mybatis.version>
 	<!-- mybatis-spring包 -->
